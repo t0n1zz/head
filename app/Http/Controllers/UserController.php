@@ -64,4 +64,107 @@ class UserController extends Controller
                 'option' => []
             ]);
     }
+
+    public function update(Request $request, $id)
+	{
+		$kelas = User::findOrFail($id);
+
+		$name = $kelas->name;
+
+		$kelas->update($request->all());
+
+		return response()
+			->json([
+				'saved' => true,
+				'message' => 'User ' .$name. ' berhasil diubah'
+			]);
+	}
+
+    public function updateStatus($id)
+	{
+		$kelas = User::findOrFail($id);
+
+		$name = $kelas->name;
+
+		if($kelas->is_active == 1){
+			$kelas->is_active = 0;
+			$message = 'User ' .$name. ' berhasil dinon-aktifkan';
+		}else{
+			$kelas->is_active = 1;
+			$message = 'User ' .$name. ' berhasil diaktifkan';
+		}
+
+		$kelas->update();
+
+		return response()
+			->json([
+				'saved' => true,
+				'message' => $message
+			]);
+    }
+    
+    public function updatePassword(Request $request, $id)
+	{
+		$kelas = User::findOrFail($id);
+
+		if (!Hash::check(request('password_old'), $kelas->password)) {
+				return response()->json([
+						'message' => 'Password lama anda salah',
+						'status' => 500
+				], 500);
+		}
+
+		if (Hash::check(request('password'), $kelas->password)) {
+			return response()->json([
+					'message' => 'Password baru tidak boleh sama dengan yang lama',
+					'status' => 500
+			], 500);
+		}
+	
+		$password = $request->password;
+		$password = Hash::make($password);
+
+		$name = $kelas->name;
+
+		$kelas->password = $password;
+		$kelas->update();
+
+		return response()
+			->json([
+				'saved' => true,
+				'message' => 'Password user ' .$name. ' telah berhasil diubah'
+			]);
+    }
+    
+    public function updateResetPassword($id)
+	{
+		$kelas = User::findOrFail($id);
+		$password = env('RESET_PASSWORD');
+		$password = Hash::make($password);
+
+		$name = $kelas->name;
+
+		$kelas->password = $password;
+		$kelas->update();
+
+		return response()
+			->json([
+				'saved' => true,
+				'message' => 'Password user ' .$name. ' telah berhasil direset'
+			]);
+    }
+    
+    public function destroy($id)
+	{
+		$kelas = User::findOrFail($id);
+		$name = $kelas->name;
+
+		$kelas->delete();
+
+		return response()
+			->json([
+				'deleted' => true,
+				'message' => $this->message. ' ' .$name. 'berhasil dihapus'
+			]);
+	}
 }
