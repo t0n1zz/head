@@ -8,14 +8,23 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Permission\Traits\HasRoles;
 
 use App\Support\Dataviewer;
+use App\Support\ExposePermissions;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, LogsActivity, Dataviewer;
+    use HasRoles, Notifiable, LogsActivity, Dataviewer, ExposePermissions;
 
     protected static $logAttributes = ['name', 'email', 'username','shop_id','is_active','mobile','type'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['can'];
 
     /**
      * The attributes that are mass assignable.

@@ -152,7 +152,19 @@ class UserController extends Controller
 				'saved' => true,
 				'message' => 'Password user ' .$name. ' telah berhasil direset'
 			]);
-    }
+	}
+	
+	public function updateHakAkses(Request $request, $id)
+	{
+		$kelas = User::findOrFail($id);
+		$this->hakAksesSave($request,$kelas);
+
+		return response()
+			->json([
+				'saved' => true,
+				'message' => 'Hak Akses User ' .$kelas->name. ' berhasil diubah'
+			]);
+	}
     
     public function destroy($id)
 	{
@@ -166,5 +178,27 @@ class UserController extends Controller
 				'deleted' => true,
 				'message' => $this->message. ' ' .$name. 'berhasil dihapus'
 			]);
+	}
+
+	public function hakAkses($request,$permission,$user)
+	{
+		if($request == true) {
+			if(!$user->hasPermissionTo($permission)){
+				$user->givePermissionTo($permission);
+			}
+		}else{
+			$user->revokePermissionTo($permission);
+		}
+	}
+
+	public function hakAksesSave($request,$user)
+	{
+		$this->hakAkses($request->index_user,'index_user',$user);
+		$this->hakAkses($request->create_user,'create_user',$user);
+		$this->hakAkses($request->update_user,'update_user',$user);
+		$this->hakAkses($request->destroy_user,'destroy_user',$user);
+		$this->hakAkses($request->reset_password,'reset_password',$user);
+		$this->hakAkses($request->hak_akses_user,'hak_akses_user',$user);
+		$this->hakAkses($request->status_user,'status_user',$user);
 	}
 }
