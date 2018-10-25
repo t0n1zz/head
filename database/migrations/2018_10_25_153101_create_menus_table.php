@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUploadPiagamsTable extends Migration
+class Menu extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateUploadPiagamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('upload_piagams', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('idmhs');
-            $table->integer('idsyarat');
-            $table->string('tipe');
-            $table->string('file_name');
-            $table->string('exten');
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('idmenu');
+            $table->integer('idshop');
+            $table->string('menu');
+            $table->string('estimasi');
+            $table->integer('harga');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ class CreateUploadPiagamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('upload_piagams');
+        Schema::dropIfExists('menus');
     }
 }
