@@ -22,9 +22,9 @@ class UserController extends Controller
 	{
 		return response()
 			->json([
-                'form' => User::initialize(),
-                'rules' => User::$rules,
-                'option' => []
+                            'form' => User::initialize(),
+                            'rules' => User::$rules,
+                            'option' => []
 			]);
     }
 
@@ -32,18 +32,18 @@ class UserController extends Controller
 	{
 		$name = $request->name;
 		$password = $request->password;
-        $passwordConfirm = $request->passwordConfirm;
-        $shopId = $request->shopId;
-        $type = $request->type;
+                $passwordConfirm = $request->passwordConfirm;
+                $shopId = $request->shopId;
+                $type = $request->type;
 
 		//password encryption	
 		$password = Hash::make($password);
 
 		// save user
 		$kelas = User::create($request->except('password','is_active','shop_id') + [
-            'password' => $password, 
-            'shop_id' => $shopId,
-            'type' => $type,
+                        'password' => $password, 
+                        'shop_id' => $shopId,
+                        'type' => $type,
 			'is_active' => 1
 		]);
 
@@ -59,10 +59,10 @@ class UserController extends Controller
 		$kelas = User::findOrFail($id);
 		
 		return response()
-            ->json([
-                'form' => $kelas,
-                'option' => []
-            ]);
+                ->json([
+                    'form' => $kelas,
+                    'option' => []
+                ]);
     }
 
     public function update(Request $request, $id)
